@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "${{PACKAGE_NAME}}"
-    compileSdk = 34
+    compileSdk = ${{COMPILE_SDK}}
 
     defaultConfig {
         applicationId = "${{PACKAGE_NAME}}"
@@ -43,7 +43,7 @@ dependencies {
     implementation(libs.jme.effects)
 
 ${% if LANGUAGE == 'kotlin' %}
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinComile>().configureEach {
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions.jvmTarget = "${{JAVA_TARGET}}"
 }
 ${% endif %}
