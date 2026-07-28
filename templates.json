@@ -1,0 +1,9 @@
+{
+  "templates": [
+      { "path": "demo" },
+      { "path": "tetris" },
+      { "path": "bubblewand" },
+      { "path": "pianoman" }
+  ]
+}
+
