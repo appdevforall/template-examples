@@ -1,0 +1,115 @@
+package ${{PACKAGE_NAME}} 
+
+import android.content.pm.ActivityInfo
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var pianoKeyboard: PianoKeyboardView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        setContentView(R.layout.activity_main)
+        val rootLayout = findViewById<android.view.View>(R.id.rootLayout)
+        val bottomBuffer = (8 * resources.displayMetrics.density).toInt()
+        ViewCompat.setOnApplyWindowInsetsListener(rootLayout) { view, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom + bottomBuffer)
+            insets
+        }
+        setSupportActionBar(findViewById<Toolbar>(R.id.toolbar))
+        pianoKeyboard = findViewById(R.id.pianoKeyboard)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_preferences -> {
+                showPreferencesDialog()
+                return true
+            }
+            R.id.action_about -> {
+                showAboutDialog()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showPreferencesDialog() {
+        val entries = arrayOf(getString(R.string.instrument), getString(R.string.key_duration))
+        AlertDialog.Builder(this, R.style.AlertDialogOverlay)
+            .setTitle(R.string.preferences)
+            .setItems(entries) { _, which ->
+                when (which) {
+                    0 -> showInstrumentDialog()
+                    1 -> showKeyDurationDialog()
+                }
+            }
+            .show()
+    }
+
+    private fun showInstrumentDialog() {
+        val instruments = AppPrefs.listInstruments(this)
+        if (instruments.isEmpty()) return
+        val current = AppPrefs.getInstrument(this)
+        var selectedIndex = instruments.indexOf(current).coerceAtLeast(0)
+
+        AlertDialog.Builder(this, R.style.AlertDialogOverlay)
+            .setTitle(R.string.instrument)
+            .setSingleChoiceItems(instruments.toTypedArray(), selectedIndex) { _, which ->
+                selectedIndex = which
+            }
+            .setPositiveButton(R.string.apply) { dialog, _ ->
+                val selected = instruments[selectedIndex]
+                AppPrefs.setInstrument(this, selected)
+                pianoKeyboard.setInstrument(selected)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
+    private fun showKeyDurationDialog() {
+        val options = AppPrefs.KEY_DURATION_OPTIONS
+        val labels = options.map { seconds -> resources.getQuantityString(R.plurals.seconds, seconds, seconds) }
+        val current = AppPrefs.getKeyDurationSeconds(this)
+        var selectedIndex = options.indexOf(current).coerceAtLeast(0)
+
+        AlertDialog.Builder(this, R.style.AlertDialogOverlay)
+            .setTitle(R.string.key_duration)
+            .setSingleChoiceItems(labels.toTypedArray(), selectedIndex) { _, which ->
+                selectedIndex = which
+            }
+            .setPositiveButton(R.string.apply) { dialog, _ ->
+                val selected = options[selectedIndex]
+                AppPrefs.setKeyDurationSeconds(this, selected)
+                pianoKeyboard.setKeyDurationSeconds(selected)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
+    private fun showAboutDialog() {
+        val versionName = runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull()
+        val message = getString(R.string.about_message, versionName ?: "")
+        AlertDialog.Builder(this, R.style.AlertDialogOverlay)
+            .setTitle(R.string.about)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+}

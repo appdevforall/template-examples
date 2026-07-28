@@ -1,0 +1,9 @@
+package com.example.jmetris
+
+import com.jme3.app.AndroidHarness
+
+class MainActivity : AndroidHarness() {
+    init {
+        appClass = TetrisGame::class.java.name
+    }
+}

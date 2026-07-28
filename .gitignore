@@ -32,3 +32,10 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Code On The Go local sync state
+.cg/
+.androidide/
+
+# Local agent/tool settings
+.claude/

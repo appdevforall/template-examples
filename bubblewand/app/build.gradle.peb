@@ -1,0 +1,48 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+}
+
+android {
+    namespace = "${{PACKAGE_NAME}}" 
+    compileSdk = ${{COMPILE_SDK}} 
+
+    defaultConfig {
+        applicationId = "${{PACKAGE_NAME}}" 
+        minSdk = ${{MIN_SDK}} 
+        targetSdk = ${{TARGET_SDK}} 
+        versionCode = 1
+        versionName = "1.0"
+
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = ${{JAVA_SOURCE_COMPAT}} 
+        targetCompatibility = ${{JAVA_TARGET_COMPAT}} 
+    }
+
+    kotlinOptions {
+        jvmTarget = "${{JAVA_TARGET}}" 
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+}
+
+dependencies {
+    implementation(libs.jme.core)
+    implementation(libs.jme.android)
+    implementation(libs.jme.android.native)
+}
