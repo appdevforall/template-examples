@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "${{PACKAGE_NAME}}"
-    compileSdk = ${{COMPILE_SDK}}
+    compileSdk = ${{COMPILE_SDK}}  
 
     defaultConfig {
         applicationId = "${{PACKAGE_NAME}}"
@@ -25,7 +25,7 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = ${{JAVA_SOURCE_COMPAT}}
+        sourceCompatibility = ${{JAVA_SOURCE_COMPAT}}  
         targetCompatibility = ${{JAVA_TARGET_COMPAT}}  
     }
 

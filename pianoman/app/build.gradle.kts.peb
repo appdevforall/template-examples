@@ -28,7 +28,7 @@ val hasValidSigningProps = keystorePropsFile.exists().also { exists ->
 
 android {
     namespace = "${{PACKAGE_NAME}}" 
-    compileSdk = ${{COMPILE_SDK}} 
+    compileSdk = ${{COMPILE_SDK}}  
     
     // disable linter
     lint {
@@ -48,7 +48,7 @@ android {
 
     defaultConfig {
         applicationId = "${{PACKAGE_NAME}}" 
-        minSdk = ${{MIN_SDK}} 
+        minSdk = ${{MIN_SDK}}  
         targetSdk = ${{TARGET_SDK}}  
         versionCode = 1
         versionName = "1.0"
@@ -59,8 +59,8 @@ android {
     }
     
     compileOptions {
-        sourceCompatibility = ${{JAVA_SOURCE_COMPAT}} 
-        targetCompatibility = ${{JAVA_TARGET_COMPAT}} 
+        sourceCompatibility = ${{JAVA_SOURCE_COMPAT}}  
+        targetCompatibility = ${{JAVA_TARGET_COMPAT}}  
     }
 
     buildTypes {
